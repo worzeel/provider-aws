@@ -2,6 +2,7 @@ package function
 
 import (
 	"context"
+	"fmt"
 
 	svcsdk "github.com/aws/aws-sdk-go/service/lambda"
 	svcsdkapi "github.com/aws/aws-sdk-go/service/lambda/lambdaiface"
@@ -124,6 +125,12 @@ func isUpToDate(cr *svcapitypes.Function, obj *svcsdk.GetFunctionOutput) (bool, 
 	// Code *FunctionCode `type:"structure" required:"true"`
 	// which is used when creating the function.
 	// We can't currently properly implement a comparison
+
+	if aws.StringValue(cr.Spec.ForProvider.Code.ImageURI) != aws.StringValue(obj.Code.ImageUri) {
+		fmt.Printf("ForProvider.Code.ImageURI: %s\n", *cr.Spec.ForProvider.Code.ImageURI)
+		fmt.Printf("obj.Code.ImageUri: %s\n", *obj.Code.ImageUri)
+		return false, nil
+	}
 
 	// Compare CONFIGURATION
 	if aws.StringValue(cr.Spec.ForProvider.Description) != aws.StringValue(obj.Configuration.Description) {
@@ -338,8 +345,8 @@ func (u *updater) update(ctx context.Context, mg resource.Managed) (managed.Exte
 func GenerateUpdateFunctionCodeInput(cr *svcapitypes.Function) *svcsdk.UpdateFunctionCodeInput {
 	f0 := &svcsdk.UpdateFunctionCodeInput{}
 	f0.SetFunctionName(cr.Name)
-	if cr.Spec.ForProvider.CustomFunctionCodeParameters.ImageURI != nil {
-		f0.SetImageUri(*cr.Spec.ForProvider.CustomFunctionCodeParameters.ImageURI)
+	if cr.Spec.ForProvider.Code.ImageURI != nil {
+		f0.SetImageUri(*cr.Spec.ForProvider.Code.ImageURI)
 	}
 	if cr.Spec.ForProvider.CustomFunctionCodeParameters.S3Bucket != nil {
 		f0.SetS3Bucket(*cr.Spec.ForProvider.CustomFunctionCodeParameters.S3Bucket)

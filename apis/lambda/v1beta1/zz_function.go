@@ -32,6 +32,9 @@ type FunctionParameters struct {
 	// The instruction set architecture that the function supports. Enter a string
 // array with one of the valid values. The default value is x86_64.
 	 Architectures []*string `json:"architectures,omitempty"` 
+	// The code for the function.
+	 // +kubebuilder:validation:Required
+	Code *FunctionCode `json:"code"`
 	// To enable code signing for this function, specify the ARN of a code-signing
 // configuration. A code-signing configuration includes a set of signing profiles,
 // which define the trusted publishers for this function.

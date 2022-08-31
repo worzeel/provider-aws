@@ -8,7 +8,6 @@ ignore:
   field_paths:
     - CreateFunctionInput.FunctionName
     - CreateFunctionInput.VpcConfig
-    - CreateFunctionInput.Code
     - GetFunctionInput.FunctionName
     - DeleteFunctionInput.FunctionName
     - CreateFunctionInput.Role

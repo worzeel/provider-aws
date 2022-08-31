@@ -40,6 +40,15 @@ func GenerateGetFunctionInput(cr *svcapitypes.Function) *svcsdk.GetFunctionInput
 func GenerateFunction(resp *svcsdk.GetFunctionOutput) *svcapitypes.Function {
 	cr := &svcapitypes.Function{}
 
+	if resp.Code != nil {
+		f0 := &svcapitypes.FunctionCode{}
+		if resp.Code.ImageUri != nil {
+			f0.ImageURI = resp.Code.ImageUri
+		}
+		cr.Spec.ForProvider.Code = f0
+	} else {
+		cr.Spec.ForProvider.Code = nil
+	}
 	if resp.Tags != nil {
 		f3 := map[string]*string{}
 		for f3key, f3valiter := range resp.Tags {
@@ -68,85 +77,104 @@ func GenerateCreateFunctionInput(cr *svcapitypes.Function) *svcsdk.CreateFunctio
 		}
 		res.SetArchitectures(f0)
 	}
+	if cr.Spec.ForProvider.Code != nil {
+		f1 := &svcsdk.FunctionCode{}
+		if cr.Spec.ForProvider.Code.ImageURI != nil {
+			f1.SetImageUri(*cr.Spec.ForProvider.Code.ImageURI)
+		}
+		if cr.Spec.ForProvider.Code.S3Bucket != nil {
+			f1.SetS3Bucket(*cr.Spec.ForProvider.Code.S3Bucket)
+		}
+		if cr.Spec.ForProvider.Code.S3Key != nil {
+			f1.SetS3Key(*cr.Spec.ForProvider.Code.S3Key)
+		}
+		if cr.Spec.ForProvider.Code.S3ObjectVersion != nil {
+			f1.SetS3ObjectVersion(*cr.Spec.ForProvider.Code.S3ObjectVersion)
+		}
+		if cr.Spec.ForProvider.Code.ZipFile != nil {
+			f1.SetZipFile(cr.Spec.ForProvider.Code.ZipFile)
+		}
+		res.SetCode(f1)
+	}
 	if cr.Spec.ForProvider.CodeSigningConfigARN != nil {
 		res.SetCodeSigningConfigArn(*cr.Spec.ForProvider.CodeSigningConfigARN)
 	}
 	if cr.Spec.ForProvider.DeadLetterConfig != nil {
-		f2 := &svcsdk.DeadLetterConfig{}
+		f3 := &svcsdk.DeadLetterConfig{}
 		if cr.Spec.ForProvider.DeadLetterConfig.TargetARN != nil {
-			f2.SetTargetArn(*cr.Spec.ForProvider.DeadLetterConfig.TargetARN)
+			f3.SetTargetArn(*cr.Spec.ForProvider.DeadLetterConfig.TargetARN)
 		}
-		res.SetDeadLetterConfig(f2)
+		res.SetDeadLetterConfig(f3)
 	}
 	if cr.Spec.ForProvider.Description != nil {
 		res.SetDescription(*cr.Spec.ForProvider.Description)
 	}
 	if cr.Spec.ForProvider.Environment != nil {
-		f4 := &svcsdk.Environment{}
+		f5 := &svcsdk.Environment{}
 		if cr.Spec.ForProvider.Environment.Variables != nil {
-			f4f0 := map[string]*string{}
-			for f4f0key, f4f0valiter := range cr.Spec.ForProvider.Environment.Variables {
-				var f4f0val string
-				f4f0val = *f4f0valiter
-				f4f0[f4f0key] = &f4f0val
+			f5f0 := map[string]*string{}
+			for f5f0key, f5f0valiter := range cr.Spec.ForProvider.Environment.Variables {
+				var f5f0val string
+				f5f0val = *f5f0valiter
+				f5f0[f5f0key] = &f5f0val
 			}
-			f4.SetVariables(f4f0)
+			f5.SetVariables(f5f0)
 		}
-		res.SetEnvironment(f4)
+		res.SetEnvironment(f5)
 	}
 	if cr.Spec.ForProvider.FileSystemConfigs != nil {
-		f5 := []*svcsdk.FileSystemConfig{}
-		for _, f5iter := range cr.Spec.ForProvider.FileSystemConfigs {
-			f5elem := &svcsdk.FileSystemConfig{}
-			if f5iter.ARN != nil {
-				f5elem.SetArn(*f5iter.ARN)
+		f6 := []*svcsdk.FileSystemConfig{}
+		for _, f6iter := range cr.Spec.ForProvider.FileSystemConfigs {
+			f6elem := &svcsdk.FileSystemConfig{}
+			if f6iter.ARN != nil {
+				f6elem.SetArn(*f6iter.ARN)
 			}
-			if f5iter.LocalMountPath != nil {
-				f5elem.SetLocalMountPath(*f5iter.LocalMountPath)
+			if f6iter.LocalMountPath != nil {
+				f6elem.SetLocalMountPath(*f6iter.LocalMountPath)
 			}
-			f5 = append(f5, f5elem)
+			f6 = append(f6, f6elem)
 		}
-		res.SetFileSystemConfigs(f5)
+		res.SetFileSystemConfigs(f6)
 	}
 	if cr.Spec.ForProvider.Handler != nil {
 		res.SetHandler(*cr.Spec.ForProvider.Handler)
 	}
 	if cr.Spec.ForProvider.ImageConfig != nil {
-		f7 := &svcsdk.ImageConfig{}
+		f8 := &svcsdk.ImageConfig{}
 		if cr.Spec.ForProvider.ImageConfig.Command != nil {
-			f7f0 := []*string{}
-			for _, f7f0iter := range cr.Spec.ForProvider.ImageConfig.Command {
-				var f7f0elem string
-				f7f0elem = *f7f0iter
-				f7f0 = append(f7f0, &f7f0elem)
+			f8f0 := []*string{}
+			for _, f8f0iter := range cr.Spec.ForProvider.ImageConfig.Command {
+				var f8f0elem string
+				f8f0elem = *f8f0iter
+				f8f0 = append(f8f0, &f8f0elem)
 			}
-			f7.SetCommand(f7f0)
+			f8.SetCommand(f8f0)
 		}
 		if cr.Spec.ForProvider.ImageConfig.EntryPoint != nil {
-			f7f1 := []*string{}
-			for _, f7f1iter := range cr.Spec.ForProvider.ImageConfig.EntryPoint {
-				var f7f1elem string
-				f7f1elem = *f7f1iter
-				f7f1 = append(f7f1, &f7f1elem)
+			f8f1 := []*string{}
+			for _, f8f1iter := range cr.Spec.ForProvider.ImageConfig.EntryPoint {
+				var f8f1elem string
+				f8f1elem = *f8f1iter
+				f8f1 = append(f8f1, &f8f1elem)
 			}
-			f7.SetEntryPoint(f7f1)
+			f8.SetEntryPoint(f8f1)
 		}
 		if cr.Spec.ForProvider.ImageConfig.WorkingDirectory != nil {
-			f7.SetWorkingDirectory(*cr.Spec.ForProvider.ImageConfig.WorkingDirectory)
+			f8.SetWorkingDirectory(*cr.Spec.ForProvider.ImageConfig.WorkingDirectory)
 		}
-		res.SetImageConfig(f7)
+		res.SetImageConfig(f8)
 	}
 	if cr.Spec.ForProvider.KMSKeyARN != nil {
 		res.SetKMSKeyArn(*cr.Spec.ForProvider.KMSKeyARN)
 	}
 	if cr.Spec.ForProvider.Layers != nil {
-		f9 := []*string{}
-		for _, f9iter := range cr.Spec.ForProvider.Layers {
-			var f9elem string
-			f9elem = *f9iter
-			f9 = append(f9, &f9elem)
+		f10 := []*string{}
+		for _, f10iter := range cr.Spec.ForProvider.Layers {
+			var f10elem string
+			f10elem = *f10iter
+			f10 = append(f10, &f10elem)
 		}
-		res.SetLayers(f9)
+		res.SetLayers(f10)
 	}
 	if cr.Spec.ForProvider.MemorySize != nil {
 		res.SetMemorySize(*cr.Spec.ForProvider.MemorySize)
@@ -161,23 +189,23 @@ func GenerateCreateFunctionInput(cr *svcapitypes.Function) *svcsdk.CreateFunctio
 		res.SetRuntime(*cr.Spec.ForProvider.Runtime)
 	}
 	if cr.Spec.ForProvider.Tags != nil {
-		f14 := map[string]*string{}
-		for f14key, f14valiter := range cr.Spec.ForProvider.Tags {
-			var f14val string
-			f14val = *f14valiter
-			f14[f14key] = &f14val
+		f15 := map[string]*string{}
+		for f15key, f15valiter := range cr.Spec.ForProvider.Tags {
+			var f15val string
+			f15val = *f15valiter
+			f15[f15key] = &f15val
 		}
-		res.SetTags(f14)
+		res.SetTags(f15)
 	}
 	if cr.Spec.ForProvider.Timeout != nil {
 		res.SetTimeout(*cr.Spec.ForProvider.Timeout)
 	}
 	if cr.Spec.ForProvider.TracingConfig != nil {
-		f16 := &svcsdk.TracingConfig{}
+		f17 := &svcsdk.TracingConfig{}
 		if cr.Spec.ForProvider.TracingConfig.Mode != nil {
-			f16.SetMode(*cr.Spec.ForProvider.TracingConfig.Mode)
+			f17.SetMode(*cr.Spec.ForProvider.TracingConfig.Mode)
 		}
-		res.SetTracingConfig(f16)
+		res.SetTracingConfig(f17)
 	}
 
 	return res

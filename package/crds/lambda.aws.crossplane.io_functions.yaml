@@ -1050,6 +1050,9 @@ spec:
                         type: string
                       s3ObjectVersion:
                         type: string
+                      zipFile:
+                        format: byte
+                        type: string
                     type: object
                   codeSigningConfigARN:
                     description: To enable code signing for this function, specify
